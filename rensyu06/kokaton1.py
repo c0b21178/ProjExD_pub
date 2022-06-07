@@ -235,9 +235,7 @@ def main():
 
         """countが0、scoreが10になったら5秒後に終了"""
         if count == 0:
-
             info2=tkm.showinfo("あなたの得点",f"{score}点です") #info2を書いた人　神尾京吾
-
             return
         elif score == 10:
             info2=tkm.showinfo("あなたの得点","満点です。おめでとう")
