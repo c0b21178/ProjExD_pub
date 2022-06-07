@@ -7,6 +7,8 @@
 """
 
 #moduleのインポート
+import tkinter as tk #tkinterを呼び出し
+import tkinter.messagebox as tkm  #メッセージボックスを呼び出し 追加した人：神尾京吾
 import os
 import pygame as pg
 import random
@@ -122,6 +124,13 @@ class Bird(pg.sprite.Sprite):
             self.image = self.original
             self.movex = speed
             self.movey = speed
+
+            n=random.randint(0,5) #0から5の乱数を生成 ここからinfoまでを書いた人：神尾京吾
+            if n==0: #nが0か速度が絶対値240より大きい時
+                self.movex = 3 #最初の速さ
+                self.movey = 3
+                info=tkm.showinfo("速度をリセット!","アシクビヲクジキマシター") #メッセージを表示
+
             global x
             x = random.randint(0,9)
             self.image, self.rect = load_image(f"{x}.png", -1) #木下　宗一郎
@@ -141,6 +150,8 @@ class Bird(pg.sprite.Sprite):
 
 def main():
     #画面などの設定
+    root=tk.Tk()
+    root.withdraw() #メインウィンドウ(tk)を表示しない 書いた人：神尾京吾
     pg.init()
     screen = pg.display.set_mode((1200, 600), pg.SCALED)
     pg.display.set_caption("逃げるな!こうかとん！")
@@ -190,6 +201,10 @@ def main():
                     count -= 1
             elif event.type == pg.MOUSEBUTTONUP: #mouseから離れたら
                 fist.unpunch()
+        font = pg.font.SysFont("meiryo", 16) #フォントを日本語対応のものにする #ここから3行書いた人：神尾京吾
+        text = font.render("こうかとんを10回たたけ", True, (10, 10, 10)) #フォントを表示
+        textpos = text.get_rect(centerx=background.get_width() / 10, y=10) #この位置に
+        background.blit(text, textpos)
 
         if count == 0: #5回missしたら
             font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
@@ -224,10 +239,14 @@ def main():
 
         """countが0、scoreが10になったら5秒後に終了"""
         if count == 0:
+
+            info2=tkm.showinfo("あなたの得点",f"{score}点です") #info2を書いた人　神尾京吾
+
             pg.time.wait(2000)
+
             return
         elif score == 10:
-            pg.time.wait(5000)
+            info2=tkm.showinfo("あなたの得点","満点です。おめでとう")
             return
 
 
