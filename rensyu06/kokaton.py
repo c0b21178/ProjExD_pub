@@ -141,7 +141,7 @@ def main():
 
     background = pg.Surface(screen.get_size())
     background = background.convert()
-    background = pg.image.load("rensyu06\data\koka.png")
+    background.fill((255, 255, 0))
 
     if pg.font:
         font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
