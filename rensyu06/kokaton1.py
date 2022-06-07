@@ -126,7 +126,7 @@ class Bird(pg.sprite.Sprite):
             self.movey = speed
 
             n=random.randint(0,5) #0から5の乱数を生成 ここからinfoまでを書いた人：神尾京吾
-            if n==0: #nが0か速度が絶対値240より大きい時
+            if n==0: #nが0の時
                 self.movex = 3 #最初の速さ
                 self.movey = 3
                 info=tkm.showinfo("速度をリセット!","アシクビヲクジキマシター") #メッセージを表示
@@ -160,7 +160,6 @@ def main():
     background = pg.Surface(screen.get_size())
     background = background.convert()
     background = pg.image.load("rensyu06\data\koka.png")#木下　宗一郎
-    #background.fill((255, 255, 0))
 
     if pg.font:
         font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
