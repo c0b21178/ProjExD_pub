@@ -3,7 +3,7 @@
 マウスの動きに合わせて腕が動き、クリックしたら腕が振り下ろされる。
 腕が当たったらこうかとんがびっくりして回転し、腕が当たらなかったらミスになる。
 また、腕が当たるとこうかとんの動くスピードがランダムだ変わる。
-こうかとんに10回腕を振り下ろすか、5回ミスになったらゲームが終了。
+こうかとんに10回腕を振り下ろすか、残機が0になったらゲームが終了。
 """
 
 #moduleのインポート
@@ -54,7 +54,7 @@ class Fist(pg.sprite.Sprite):
     """腕の画像の貼り付け"""
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image("fist.png", -1, 0.5)
+        self.image, self.rect = load_image("fist.png", -1, 0.75)
         self.fist_offset = (-235, -80)
         self.punching = False
 
@@ -82,8 +82,10 @@ class Bird(pg.sprite.Sprite):
 
     """こうかとんが画面上を動き回り、パンチされたら回転して速さがランダムで変わる。"""
     def __init__(self):
+        global x
+        x= random.randint(0,9)
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image("2.png", -1, 1)
+        self.image, self.rect = load_image(f"{x}.png", -1, 1) #木下宗一郎
         screen = pg.display.get_surface()
         self.area = screen.get_rect()
         self.rect.centerx = random.randint(0, 1200) #初期位置をランダムに
@@ -122,11 +124,18 @@ class Bird(pg.sprite.Sprite):
             self.image = self.original
             self.movex = speed
             self.movey = speed
+
             n=random.randint(0,5) #0から5の乱数を生成 ここからinfoまでを書いた人：神尾京吾
             if n==0: #nが0か速度が絶対値240より大きい時
                 self.movex = 3 #最初の速さ
                 self.movey = 3
                 info=tkm.showinfo("速度をリセット!","アシクビヲクジキマシター") #メッセージを表示
+
+            global x
+            x = random.randint(0,9)
+            self.image, self.rect = load_image(f"{x}.png", -1) #木下　宗一郎
+            screen = pg.display.get_surface()
+            self.area = screen.get_rect()
         else:
             rotate = pg.transform.rotate
             self.image = rotate(self.original, self.dizzy)
@@ -145,16 +154,17 @@ def main():
     root.withdraw() #メインウィンドウ(tk)を表示しない 書いた人：神尾京吾
     pg.init()
     screen = pg.display.set_mode((1200, 600), pg.SCALED)
-    pg.display.set_caption("Don't Run Away! Kokaton!")
+    pg.display.set_caption("逃げるな!こうかとん！")
     pg.mouse.set_visible(False)
 
     background = pg.Surface(screen.get_size())
     background = background.convert()
-    background.fill((255, 255, 0))
+    background = pg.image.load("rensyu06\data\koka.png")#木下　宗一郎
+    #background.fill((255, 255, 0))
 
     if pg.font:
         font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-        text = font.render("逃げるな！　こうかとん！", True, (10, 10, 10))
+        text = font.render("こうかとんを10回叩け!", True, (10, 10, 10))
         textpos = text.get_rect(centerx = background.get_width() / 2, y = 10)
         background.blit(text, textpos)
 
@@ -168,8 +178,8 @@ def main():
     fist = Fist()
     allsprites = pg.sprite.RenderPlain((bird, fist))
     clock = pg.time.Clock()
-    count = 5
-    score = 0
+    count = 9   #残機
+    score = 0    #得点
 
     going = True
     while going:
@@ -198,14 +208,14 @@ def main():
 
         if count == 0: #5回missしたら
             font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-            text = font.render("ゲームオーバー", True, (255, 0, 0), (10, 10, 10))
+            text = font.render("Game Over…", True, (255, 0, 0), (10, 10, 10))
             textpos = text.get_rect(centerx = background.get_width() / 2,
                                     centery = 150)
             background.blit(text, textpos)
             
         elif score == 10: #10点になったら
             font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-            text = font.render("クリア！", True, (255, 0, 0), (255,255,255))
+            text = font.render("Clear!", True, (255, 0, 0), (255,255,255))
             textpos = text.get_rect(centerx = background.get_width() / 2,
                                     centery = 150)
             background.blit(text, textpos)
@@ -229,7 +239,11 @@ def main():
 
         """countが0、scoreが10になったら5秒後に終了"""
         if count == 0:
+
             info2=tkm.showinfo("あなたの得点",f"{score}点です") #info2を書いた人　神尾京吾
+
+            pg.time.wait(2000)
+
             return
         elif score == 10:
             info2=tkm.showinfo("あなたの得点","満点です。おめでとう")
