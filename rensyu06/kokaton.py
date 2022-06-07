@@ -80,8 +80,10 @@ class Bird(pg.sprite.Sprite):
 
     """こうかとんが画面上を動き回り、パンチされたら回転して速さがランダムで変わる。"""
     def __init__(self):
+        global x
+        x= random.randint(0,9)
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image("2.png", -1, 1)
+        self.image, self.rect = load_image(f"{x}.png", -1, 1) #木下宗一郎
         screen = pg.display.get_surface()
         self.area = screen.get_rect()
         self.rect.centerx = random.randint(0, 1200) #初期位置をランダムに
@@ -120,6 +122,11 @@ class Bird(pg.sprite.Sprite):
             self.image = self.original
             self.movex = speed
             self.movey = speed
+            global x
+            x = random.randint(0,9)
+            self.image, self.rect = load_image(f"{x}.png", -1) #木下　宗一郎
+            screen = pg.display.get_surface()
+            self.area = screen.get_rect()
         else:
             rotate = pg.transform.rotate
             self.image = rotate(self.original, self.dizzy)
@@ -141,7 +148,8 @@ def main():
 
     background = pg.Surface(screen.get_size())
     background = background.convert()
-    background.fill((255, 255, 0))
+    background = pg.image.load("rensyu06\data\koka.png")#木下　宗一郎
+    #background.fill((255, 255, 0))
 
     if pg.font:
         font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
