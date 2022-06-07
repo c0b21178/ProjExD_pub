@@ -3,7 +3,7 @@
 マウスの動きに合わせて腕が動き、クリックしたら腕が振り下ろされる。
 腕が当たったらこうかとんがびっくりして回転し、腕が当たらなかったらミスになる。
 また、腕が当たるとこうかとんの動くスピードがランダムだ変わる。
-こうかとんに10回腕を振り下ろすか、5回ミスになったらゲームが終了。
+こうかとんに10回腕を振り下ろすか、残機が0になったらゲームが終了。
 """
 
 #moduleのインポート
@@ -52,7 +52,7 @@ class Fist(pg.sprite.Sprite):
     """腕の画像の貼り付け"""
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image("fist.png", -1, 0.5)
+        self.image, self.rect = load_image("fist.png", -1, 0.75)
         self.fist_offset = (-235, -80)
         self.punching = False
 
@@ -136,7 +136,7 @@ def main():
     #画面などの設定
     pg.init()
     screen = pg.display.set_mode((1200, 600), pg.SCALED)
-    pg.display.set_caption("Don't Run Away! Kokaton!")
+    pg.display.set_caption("逃げるな!こうかとん！")
     pg.mouse.set_visible(False)
 
     background = pg.Surface(screen.get_size())
@@ -145,7 +145,7 @@ def main():
 
     if pg.font:
         font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-        text = font.render("逃げるな！　こうかとん！", True, (10, 10, 10))
+        text = font.render("こうかとんを10回叩け!", True, (10, 10, 10))
         textpos = text.get_rect(centerx = background.get_width() / 2, y = 10)
         background.blit(text, textpos)
 
@@ -159,8 +159,8 @@ def main():
     fist = Fist()
     allsprites = pg.sprite.RenderPlain((bird, fist))
     clock = pg.time.Clock()
-    count = 5
-    score = 0
+    count = 9   #残機
+    score = 0    #得点
 
     going = True
     while going:
@@ -185,14 +185,14 @@ def main():
 
         if count == 0: #5回missしたら
             font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-            text = font.render("ゲームオーバー", True, (255, 0, 0), (10, 10, 10))
+            text = font.render("Game Over…", True, (255, 0, 0), (10, 10, 10))
             textpos = text.get_rect(centerx = background.get_width() / 2,
                                     centery = 150)
             background.blit(text, textpos)
             
         elif score == 10: #10点になったら
             font = pg.font.Font("rensyu06\IPAexfont00401\ipaexg.ttf", 64)
-            text = font.render("クリア！", True, (255, 0, 0), (255,255,255))
+            text = font.render("Clear!", True, (255, 0, 0), (255,255,255))
             textpos = text.get_rect(centerx = background.get_width() / 2,
                                     centery = 150)
             background.blit(text, textpos)
@@ -216,7 +216,7 @@ def main():
 
         """countが0、scoreが10になったら5秒後に終了"""
         if count == 0:
-            pg.time.wait(5000)
+            pg.time.wait(2000)
             return
         elif score == 10:
             pg.time.wait(5000)
